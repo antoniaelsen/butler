@@ -8,6 +8,7 @@ It has been tested on a Raspberry Pi 3 running Raspbian (buster), receiving audi
 
 - Audio fingerprinting
 - Scrobbling
+- Detect audio levels, trigger fingerprinting
 - Logging
 - Configuration files
   - Interface configuration
