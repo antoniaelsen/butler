@@ -43,7 +43,7 @@ class Scrobbler:
     timecode = params["timecode"]
     track = params["title"]
     track_number = spotify["track_number"]
-    # isrc = spotify["external_ids"]["isrc"]
+    isrc = spotify["external_ids"]["isrc"]
 
     req = {
       "album": album,
@@ -59,7 +59,7 @@ class Scrobbler:
     )
 
     timecode = timecode_from_str(timecode)
-    track = (artist, track, album)
+    track = isrc
 
     if (self.last_track != track):
       logger.info(

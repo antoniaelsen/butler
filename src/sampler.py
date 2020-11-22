@@ -4,7 +4,7 @@ import wave
 
 
 FRAME_SIZE = 256
-RECORD_SECONDS = 15
+RECORD_SECONDS = 5
 SAMPLE_FORMATS = {
     8: pyaudio.paInt8,
     16: pyaudio.paInt16,

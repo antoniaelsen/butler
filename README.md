@@ -7,6 +7,7 @@ It has been tested on a Raspberry Pi 3 running Raspbian (buster), receiving audi
 ## TODO
 
 - [x] Audio fingerprinting
+- ISRC comparisons
 - ISRC lookup of album
 - [x] Scrobbling
   - [x] Last FM request formatting
@@ -20,6 +21,8 @@ It has been tested on a Raspberry Pi 3 running Raspbian (buster), receiving audi
   - Scrobbling configuration
 - Reporting
 - Make service agnostic
+
+
 
 
 ## Author

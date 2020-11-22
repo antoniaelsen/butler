@@ -3,22 +3,25 @@ import json
 import os
 from time import sleep
 
+from fingerprinter import Fingerprinter
+from monitor import Monitor
 from sampler import Sampler
 from scrobbler import Scrobbler
-from fingerprinter import Fingerprinter
 
 
 FINGERPRINT_API_KEY = os.environ.get("FINGERPRINT_API_KEY")
 LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY")
 LASTFM_SECRET = os.environ.get("LASTFM_SECRET")
 LASTFM_SESSION_KEY = os.environ.get("LASTFM_SESSION_KEY")
+SPOTIFY_CLIENT_ID = os.environ.get("SPOTIFY_CLIENT_ID")
+SPOTIFY_CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET")
 
 SAMPLE_FILENAME = "sample.wav"
 SLEEP_SEC = 15
 
 
 logging.basicConfig(
-  level=logging.INFO,
+  level=logging.DEBUG,
   format='%(asctime)s | %(levelname)s | %(name)s | %(message)s',
   datefmt='%Y-%m-%d_%I:%M:%S'
 )
@@ -67,6 +70,7 @@ class App:
     )
     self.fp = Fingerprinter(FINGERPRINT_API_KEY)
     self.fm = Scrobbler(LASTFM_API_KEY, LASTFM_SECRET, LASTFM_SESSION_KEY)
+    self.mn = Monitor(self.fm, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
 
   def run(self):
     while(True):
@@ -82,7 +86,7 @@ class App:
         logger.info('No track detected by fingerprinter');
 
       else:
-        self.fm.run(res["result"])
+        self.mn.run(res["result"])
 
       sleep(SLEEP_SEC)
 
