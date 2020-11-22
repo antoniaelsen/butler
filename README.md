@@ -6,13 +6,20 @@ It has been tested on a Raspberry Pi 3 running Raspbian (buster), receiving audi
 
 ## TODO
 
-- Audio fingerprinting
-- Scrobbling
-- Detect audio levels, trigger fingerprinting
-- Logging
-- Configuration files
+- [x] Audio fingerprinting
+- ISRC lookup of album
+- [x] Scrobbling
+  - [x] Last FM request formatting
+  - [x] Signature
+  - [x] Redirect to browser
+  - [x] User agent
+- Detect audio levels, trigger fingerprinting on new song
+- [x] Logging
+- [x] Configuration files
   - Interface configuration
   - Scrobbling configuration
+- Reporting
+- Make service agnostic
 
 
 ## Author

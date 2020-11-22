@@ -7,18 +7,23 @@ from sampler import Sampler
 from scrobbler import Scrobbler
 from fingerprinter import Fingerprinter
 
+
 FINGERPRINT_API_KEY = os.environ.get("FINGERPRINT_API_KEY")
 LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY")
+LASTFM_SECRET = os.environ.get("LASTFM_SECRET")
+LASTFM_SESSION_KEY = os.environ.get("LASTFM_SESSION_KEY")
 
 SAMPLE_FILENAME = "sample.wav"
-SLEEP_SEC = 30
+SLEEP_SEC = 15
+
 
 logging.basicConfig(
-  level=logging.DEBUG,
+  level=logging.INFO,
   format='%(asctime)s | %(levelname)s | %(name)s | %(message)s',
   datefmt='%Y-%m-%d_%I:%M:%S'
 )
 logger = logging.getLogger("main")
+
 
 # Configuration
 
@@ -38,16 +43,22 @@ class InterfaceConfiguration:
         self.sample_format = json_data["sample_format"]
         self.sample_rate = json_data["sample_rate"]
 
-
-
 class App:
   def __init__(self):
+    # Version
+    version = "0.1.0"
+    with open("version.txt") as f:
+      version = f.read()
+    os.environ["BUTLER_VERSION"] = version
+
+    # Config
     config = {}
     with open("config.json") as f:
       raw_config = f.read()
       config = json.loads(raw_config)
     config_i = config["interface"]
 
+    # Initialize
     self.sampler = Sampler(
       interface_name = config_i["name"],
       channels = config_i["channels"],
@@ -55,7 +66,7 @@ class App:
       sample_rate = config_i["sample_rate"],
     )
     self.fp = Fingerprinter(FINGERPRINT_API_KEY)
-    self.fm = Scrobbler(LASTFM_API_KEY)
+    self.fm = Scrobbler(LASTFM_API_KEY, LASTFM_SECRET, LASTFM_SESSION_KEY)
 
   def run(self):
     while(True):
@@ -68,15 +79,13 @@ class App:
         logger.error(f'Failed to fingerprint sample');
 
       elif (res["result"] == None):
-        logger.info('Not listening to a song');
+        logger.info('No track detected by fingerprinter');
 
       else:
-        logger.info(
-          f'Currently listening to "{res["result"]["artist"]}" - '
-          f'"{res["result"]["title"]}"');
+        self.fm.run(res["result"])
 
-        
       sleep(SLEEP_SEC)
+
 
 if __name__ == "__main__":
   app = App()
