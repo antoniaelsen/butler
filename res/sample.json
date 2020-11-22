@@ -1,0 +1,89 @@
+{
+  "status": "success",
+  "result": {
+    "artist": "Glass Animals",
+    "title": "Tangerine",
+    "album": "Dreamland",
+    "release_date": "2020-08-07",
+    "label": "Polydor Records",
+    "timecode": "00:26",
+    "song_link": "https://lis.tn/Tangerine",
+    "spotify": {
+      "album": {
+        "album_type": "album",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/4yvcSjfu4PC0CYQyLy4wSq"
+            },
+            "href": "https://api.spotify.com/v1/artists/4yvcSjfu4PC0CYQyLy4wSq",
+            "id": "4yvcSjfu4PC0CYQyLy4wSq",
+            "name": "Glass Animals",
+            "type": "artist",
+            "uri": "spotify:artist:4yvcSjfu4PC0CYQyLy4wSq"
+          }
+        ],
+        "available_markets": null,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/5bfpRtBW7RNRdsm3tRyl3R"
+        },
+        "href": "https://api.spotify.com/v1/albums/5bfpRtBW7RNRdsm3tRyl3R",
+        "id": "5bfpRtBW7RNRdsm3tRyl3R",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/ab67616d0000b273712701c5e263efc8726b1464",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/ab67616d00001e02712701c5e263efc8726b1464",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/ab67616d00004851712701c5e263efc8726b1464",
+            "width": 64
+          }
+        ],
+        "name": "Dreamland",
+        "release_date": "2020-08-07",
+        "release_date_precision": "day",
+        "total_tracks": 16,
+        "type": "album",
+        "uri": "spotify:album:5bfpRtBW7RNRdsm3tRyl3R"
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/4yvcSjfu4PC0CYQyLy4wSq"
+          },
+          "href": "https://api.spotify.com/v1/artists/4yvcSjfu4PC0CYQyLy4wSq",
+          "id": "4yvcSjfu4PC0CYQyLy4wSq",
+          "name": "Glass Animals",
+          "type": "artist",
+          "uri": "spotify:artist:4yvcSjfu4PC0CYQyLy4wSq"
+        }
+      ],
+      "available_markets": [],
+      "disc_number": 1,
+      "duration_ms": 200583,
+      "explicit": false,
+      "external_ids": {
+        "isrc": "GBUM72000428"
+      },
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/40rOlDoGejXXF4B0BYsjx8"
+      },
+      "href": "https://api.spotify.com/v1/tracks/40rOlDoGejXXF4B0BYsjx8",
+      "id": "40rOlDoGejXXF4B0BYsjx8",
+      "is_local": false,
+      "name": "Tangerine",
+      "popularity": 69,
+      "preview_url": "",
+      "track_number": 2,
+      "type": "track",
+      "uri": "spotify:track:40rOlDoGejXXF4B0BYsjx8"
+    }
+  }
+}
