@@ -1,6 +1,17 @@
 {
+  "app": {
+    "mode": "record",
+    "threshold": 100
+  },
+
+  "sampling": {
+    "length": 20,
+    "period": 60
+  },
+
   "fingerprinting": {
-    "service": "audd"
+    "service": "audd",
+    "limit": 1000
   },
 
   "interface": {

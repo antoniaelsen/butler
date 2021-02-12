@@ -35,15 +35,16 @@ class Scrobbler:
     self.last_track = None
     self.last_timecode = 0
 
-  def run(self, params):
-    # TODO: Make service agnostic
-    spotify = params["spotify"]
-    album = params["album"]
-    artist = params["artist"]
-    timecode = params["timecode"]
-    track = params["title"]
-    track_number = spotify["track_number"]
-    isrc = spotify["external_ids"]["isrc"]
+  def run(self, sample):
+    # TODO(aelsen): move now playing / scrobble decision logic to monitor
+    # TODO(aelsen): set 'now playing' immediately,
+    #   scrobble if played for longer than x secs
+    album = sample.album
+    artist = sample.artist
+    timecode = sample.timecode
+    track = sample.track
+    track_number = sample.track_number
+    isrc = sample.isrc
 
     req = {
       "album": album,
@@ -81,23 +82,23 @@ class Scrobbler:
     self.last_track = track
     self.last_timecode = timecode
 
-  def now_playing(self, params):
-    res = self.request("POST", "track.updateNowPlaying", params, True)
+  def now_playing(self, req):
+    res = self.request("POST", "track.updateNowPlaying", req, True)
     if ("error" in res):
       logger.error(f'Failed to list track as "Now Playing": {res["message"]}')
       return
 
     logger.info(
-      f'Updated "Now Playing" with {params["artist"]} - {params["track"]} '
-      f'({params["album"]} : {params["trackNumber"]})'
+      f'Updated "Now Playing" with {req["artist"]} - {req["track"]} '
+      f'({req["album"]} : {req["trackNumber"]})'
     )
 
-  def scrobble(self, params):
+  def scrobble(self, req):
     ts = time.time()
-    _params = params.copy()
-    _params["timestamp"] = ts
+    _req = req.copy()
+    _req["timestamp"] = ts
 
-    res = self.request("POST", "track.scrobble", _params, True)
+    res = self.request("POST", "track.scrobble", _req, True)
 
     if ("error" in res):
       logger.warn(f'Failed to scrobble track: {res["message"]}')
@@ -108,8 +109,8 @@ class Scrobbler:
       logger.warn(f'Scrobbled track was ignored: {res}')
     else:
       logger.info(
-        f'Scrobbled {params["artist"]} - {params["track"]} '
-        f'({params["album"]} : {params["trackNumber"]}) @ {ts}'
+        f'Scrobbled {req["artist"]} - {req["track"]} '
+        f'({req["album"]} : {req["trackNumber"]}) @ {ts}'
       )
 
   # -----
@@ -136,40 +137,40 @@ class Scrobbler:
     return True
 
   def get_session(self, token):
-    params = self.sign_parameters("auth.getSession", {
+    req = self.sign_parameters("auth.getSession", {
       "api_key": self.api_key,
       "token": token
     })
-    return self.request("GET", "auth.getSession", params)
+    return self.request("GET", "auth.getSession", req)
 
   def get_token(self):
-    params = self.sign_parameters("auth.getToken", {
+    req = self.sign_parameters("auth.getToken", {
       "api_key": self.api_key
     })
-    return self.request("GET", "auth.getToken", params)
+    return self.request("GET", "auth.getToken", req)
 
-  def request(self, method, api_method, params, authenticated = False):
+  def request(self, method, api_method, req, authenticated = False):
     base = {
       "method": api_method,
       "format": "json"
     }
 
-    _params = params.copy()
+    _req = req.copy()
     if (authenticated):
       if (not self.session):
         rc = self.authenticate()
 
-      _params["api_key"] = self.api_key
-      _params["sk"] = self.session
-      _params = self.sign_parameters(api_method, _params)
+      _req["api_key"] = self.api_key
+      _req["sk"] = self.session
+      _req = self.sign_parameters(api_method, _req)
 
-    _params = { **base, **_params }
+    _req = { **base, **_req }
 
     logger.debug(
         f'Making {"AUTHENTICATED " if authenticated else ""}{method} '
-        f'request to {LASTFM_API_URL} with params {_params}'
+        f'request to {LASTFM_API_URL} with req {_req}'
     )
-    r = self.rs.request(method, LASTFM_API_URL, params=_params)
+    r = self.rs.request(method, LASTFM_API_URL, params=_req)
     res = r.json()
 
     logger.debug(f'Request {r.url} response {json.dumps(res, indent=2)}')

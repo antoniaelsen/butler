@@ -4,6 +4,7 @@ import requests
 
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 class Fingerprinter:
   def __init__(self, api_key):

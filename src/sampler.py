@@ -4,7 +4,6 @@ import wave
 
 
 FRAME_SIZE = 256
-RECORD_SECONDS = 5
 SAMPLE_FORMATS = {
     8: pyaudio.paInt8,
     16: pyaudio.paInt16,
@@ -19,34 +18,29 @@ class Sampler:
   def __init__(
       self,
       interface_name,
+      sample_duration,
       channels = 2,
       sample_format = 16,
       sample_rate = 44100,
-      sample_duration=RECORD_SECONDS
     ):
-    logger.debug("Initializing sampler")
     self.channels = channels
     self.interface_name = interface_name
     self.sample_duration = sample_duration
     self.sample_format = SAMPLE_FORMATS[sample_format]
     self.sample_rate = sample_rate
+    self.p = None
 
+  def __del__(self):
+    if (self.p):
+      self.p.terminate()
+  
+  def init(self):
+    logger.debug("Initializing sampler")
     self.p = pyaudio.PyAudio()
     self.frames = []
     self.interfaces = {}
     self.interface_index = None
-
-    self.init()
-    logger.debug(f' - Input device: [{self.interface_index}] "{self.interfaces[self.interface_index]}"')
-    logger.debug(f" - Sample Format: {self.sample_format}")
-    logger.debug(f" - Sample Rate: {self.sample_rate} kHz")
-    logger.debug(f" - Frame Size: {FRAME_SIZE} samples")
-    logger.debug(f" - Recording time: {self.sample_duration} secs")
-
-  def __del__(self):
-    self.p.terminate()
-
-  def init(self):
+  
     logger.debug("Initializing interfaces...")
     logger.debug(" - audio devices:")
     for i in range(self.p.get_device_count()):
@@ -60,6 +54,13 @@ class Sampler:
     if (self.interface_index == None):
       logger.critical(f'Failed to find audio input device "{self.interface_name}"')
       return 1
+
+    logger.debug("Sampler configuration")
+    logger.debug(f" - Sample Format: {self.sample_format}")
+    logger.debug(f" - Sample Rate: {self.sample_rate} kHz")
+    logger.debug(f" - Frame Size: {FRAME_SIZE} samples")
+    logger.debug(f" - Recording time: {self.sample_duration} secs")
+    logger.debug(f' - Input device: [{self.interface_index}] "{self.interfaces[self.interface_index]}"')
 
     return 0
 
@@ -77,7 +78,7 @@ class Sampler:
     )
 
     for i in range(0, int(self.sample_rate / FRAME_SIZE * self.sample_duration)):
-        data = stream.read(FRAME_SIZE)
+        data = stream.read(FRAME_SIZE, exception_on_overflow=False)
         self.frames.append(data)
 
     stream.stop_stream()
